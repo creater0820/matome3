@@ -87,6 +87,7 @@ class GetArticle extends Controller
                 );
             }
         }
+        // dd($detailsYahoo);
         Yahoo::insert($detailsYahoo);
 
 
@@ -148,13 +149,15 @@ class GetArticle extends Controller
                     $detail['date'] = $date[0];
                 }
                 if (preg_match(
-                    "/^<dd class=\"(.*?)\"rnum=\"[0-9]+\">(.*?)<\/font><\/dd>$/is",
+                    "/<dd class=\"(.*?)\"rnum=\"[0-9]+\">(.*?)<\/font>/is",
                     $res,
                     $comment
                 )) {
                     dd($comment);
                     $detail['comment'] = $comment[2];
                 }
+                dd($res);
+                // dd($comment);
                 $detail['comment'] = "修正！レスが取れてない";
                 if (
                     !empty($detail['title']) &&
@@ -200,16 +203,16 @@ class GetArticle extends Controller
                     $title
                 )) {
                     // dd($title);
-                    if(!empty($title[1]))
-                    $detail['title'] = $title[1];
+                    if (!empty($title[1]))
+                        $detail['title'] = $title[1];
                 }
                 if (preg_match(
                     "/[0-9]+:[0-9]+/i",
                     $res,
                     $date
                 )) {
-                    if(!empty($date[0]))
-                    $detail['date'] = $date[0];
+                    if (!empty($date[0]))
+                        $detail['date'] = $date[0];
                     // dd($detail['date']);
                 }
                 if (preg_match(
@@ -218,8 +221,8 @@ class GetArticle extends Controller
                     $publisher
                 )) {
                     // dd($publisher);
-                    if(!empty($publisher[1]))
-                    $detail['publisher'] = $publisher[1];
+                    if (!empty($publisher[1]))
+                        $detail['publisher'] = $publisher[1];
                 }
                 if (
                     !empty($detail['title']) &&

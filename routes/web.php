@@ -49,43 +49,16 @@ Route::get('/hasmany', function () {
 });
 
 Route::get('/test', function () {
-    $collections = collect([
-        [
-            'id' => 1,
-            'name' => '北山',
-            'gender' => 'man'
-        ],
-        [
-            'id' => 2,
-            'name' => '吉澤',
-            'gender' => 'woman'
-        ],
-        [
-            'id' => 3,
-            'name' => '岡田',
-            'gender' => 'woman'
-        ]
-    ]);
-
-    $filtered =  $collections->whereIn('name', ['吉澤', '北山']);
-    // dd ($filtered);
-
-
-    echo $tests->filter(function ($value, $key) {
-        return $value > 50;
-    });
-
-    // 取れない
-    // dd($collections->get('name'));
-
-
-    //$collectionはなぜnon objectか？
-    foreach ($collections->toArray() as $collection) {
-        echo $collection['name'];
-    }
-
+    
+ 
     $practices = Publisher::with('comment')->get();
-    dd($practices);
+    // dd($prasctices);
+  foreach($practices as $practice){
+      foreach($practice->comment as $comment){
+          echo $comment->id;
+      }
+  }
+  
     foreach ($practices as $practice) {
         foreach ($practice->comment as $comment) {
             echo $comment->title;
