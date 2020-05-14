@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use App\Models\Open2che;
 use App\Models\Yahoo;
 use App\Models\Cloning;

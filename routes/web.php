@@ -51,7 +51,7 @@ Route::get('/hasmany', function () {
 Route::get('/test', function () {
     
  
-    $practices = Publisher::with('comment')->get();
+    $practices = Publisher::with('Comment')->get();
     // dd($prasctices);
   foreach($practices as $practice){
       foreach($practice->comment as $comment){
