@@ -5,11 +5,10 @@
 @endsection
 
 @section('addCSS')
+@endsection
 
-
+@section('form')
 @endsection
 
 @section('content')
-@parent
-ここは子の要素です
 @endsection

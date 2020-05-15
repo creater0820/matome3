@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Open2che;
 use App\Models\Yahoo;
@@ -314,20 +315,11 @@ class GetArticle extends Controller
 
 
 
-    // class GetArticle extends Controller
-    // {
-
-    //         public function index(Request $request)
-    //         {
-    //             $items = ::all();
-    //             return view('user.index', ['items' => $items]);
-    //         }
-    //     }
-
-
-    // public function try()
-    // {
-    // }
+    public function sendArticle(Request $request)
+    {
+        $user_request = $request->name;
+        return view('layouts.result',compact($user_request));
+    }
 
 
 

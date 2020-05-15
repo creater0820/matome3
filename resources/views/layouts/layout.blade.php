@@ -11,9 +11,14 @@
 
 <body>
     <div class="container">
-        @section('content')
-        <p>親の要素です</p>
+        @section('form')
+        <form action="/send" method="post">
+        @csrf
+            <input type="text" name="name">
+            <input type="submit" value="送信">
+        </form>
         @show
+        
         <table class="tabel table-hover table-bordered ">
             @foreach($detailsOpen as $detailOpen)
             <tr>
