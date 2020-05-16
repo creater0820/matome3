@@ -5,8 +5,10 @@
 @endsection
 
 @section('addCSS')
+@endsection
 
-
+@section('form')
+@parent
 @endsection
 
 @section('content')

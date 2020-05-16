@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Open2che;
 use App\Models\Yahoo;
@@ -306,28 +307,18 @@ class GetArticle extends Controller
 
         return view('sign_up');
     }
-    public function sign_in()
+
+
+    public function sendArticle(Request $request)
     {
-
-        return view('sign_in');
+        $user_request = $request->name;
+        return view(
+            'layouts.result',
+            [
+                'user_request' => $user_request
+            ]
+        );
     }
-
-
-
-    // class GetArticle extends Controller
-    // {
-
-    //         public function index(Request $request)
-    //         {
-    //             $items = ::all();
-    //             return view('user.index', ['items' => $items]);
-    //         }
-    //     }
-
-
-    // public function try()
-    // {
-    // }
 
 
 
