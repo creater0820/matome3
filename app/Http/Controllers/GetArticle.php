@@ -307,18 +307,17 @@ class GetArticle extends Controller
 
         return view('sign_up');
     }
-    public function sign_in()
-    {
-
-        return view('sign_in');
-    }
-
 
 
     public function sendArticle(Request $request)
     {
         $user_request = $request->name;
-        return view('layouts.result',compact($user_request));
+        return view(
+            'layouts.result',
+            [
+                'user_request' => $user_request
+            ]
+        );
     }
 
 

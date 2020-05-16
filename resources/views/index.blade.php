@@ -8,6 +8,7 @@
 @endsection
 
 @section('form')
+@parent
 @endsection
 
 @section('content')
