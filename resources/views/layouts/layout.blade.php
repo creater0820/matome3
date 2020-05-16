@@ -13,13 +13,36 @@
     <div class="container">
         @section('form')
         <form action="/send" method="post">
-        @csrf
-            <input type="text" name="name">
-            <input type="submit" value="送信">
+            @csrf
+            <h2>コメントを残す</h2>
+            <h3>フォーム</h3>
+            <div>
+                <label for="name">投稿者</label>
+                <input type="text" name="name">
+            </div>
+            <div>
+                <label for="textarea">コメント</label>
+                <textarea name="comment">
+                </textarea>
+            </div>
+            <div>
+                <input type="submit" value="送信">
+            </div>
         </form>
+            @isset($new)
+            @foreach($new as $newone)
+            <table class="table table-borderd table-responsive">
+                <th>投稿者</th>
+                <td>{{$newone->name}}</td>
+                <th>コメント</th>
+                <td>{{$newone->comment}}</td>
+            
+            @endforeach
+            @endisset
+        </div>
         @show
-        
-        <table class="tabel table-hover table-bordered ">
+
+        <table class="table table-hover table-bordered ">
             @foreach($detailsOpen as $detailOpen)
             <tr>
                 <th>

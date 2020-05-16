@@ -9,7 +9,8 @@ use App\Models\Cloning;
 use App\Models\japanTime;
 use App\Open2che as AppOpen2che;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Post;
+use App\User;
 
 class GetArticle extends Controller
 {
@@ -19,6 +20,7 @@ class GetArticle extends Controller
         //  dd($detailsOpen);
         $detailsYahoo = Yahoo::get();
         $detailsJapan = japanTime::get();
+
         return view(
             'index',
             [
@@ -298,7 +300,9 @@ class GetArticle extends Controller
         return null;
     }
 
-
+    public function saveUserInformation(Request $request)
+    {
+    }
 
 
 
@@ -311,25 +315,28 @@ class GetArticle extends Controller
 
     public function sendArticle(Request $request)
     {
-        $user_request = $request->name;
+        $user_posts = $request->all();
+        $informations = array();
+        $informations[] = array(
+            'name' => $request->input('name'),
+            'comment' => $request->input('comment')
+        );
+
+        Post::insert($informations);
+        $new = Post::get();
+        $detailsOpen = Open2che::get();
+        //  dd($detailsOpen);
+        $detailsYahoo = Yahoo::get();
+        $detailsJapan = japanTime::get();
+
         return view(
-            'layouts.result',
+            'index',
             [
-                'user_request' => $user_request
+                'new' => $new,
+                'detailsOpen' => $detailsOpen,
+                'detailsYahoo' => $detailsYahoo,
+                'detailsJapan' => $detailsJapan,
             ]
         );
     }
-
-
-
-
-
-
-    //     public function store(Request $request)
-    //     {
-
-    // $items = ::all();
-
-    //     }
-    // }
 }
