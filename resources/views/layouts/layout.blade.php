@@ -29,59 +29,59 @@
                 <input type="submit" value="送信">
             </div>
         </form>
-            @isset($userPost)
-            @foreach($userPost as $newone)
-            <table class="table table-borderd table-responsive">
-                <th>投稿者</th>
-                <td>{{$newone->name}}</td>
-                <th>コメント</th>
-                <td>{{$newone->comment}}</td>
-            
+        @isset($userPost)
+        @foreach($userPost as $newone)
+        <table class="table table-borderd table-responsive">
+            <th>投稿者</th>
+            <td>{{$newone->name}}</td>
+            <th>コメント</th>
+            <td>{{$newone->comment}}</td>
+
             @endforeach
             @endisset
-        </div>
-        @show
+    </div>
+    @show
 
-        <table class="table table-hover table-bordered ">
-            @foreach($detailsOpen as $detailOpen)
-            <tr>
-                <th>
-                    {{$loop->iteration}}：オープン2ちゃんねる
-                </th>
-                <!-- <td>残り{{$loop->remaining}}</td> -->
-                <td>{{($detailOpen->title)}}</td>
-                <th>投稿日時</th>
-                <td>{{($detailOpen->date)}}</td>
-                <th>{{$loop->iteration}}レス目</th>
-                <td>{{($detailOpen->comment)}}</td>
-            </tr>
-            @endforeach
+    <table class="table table-hover table-bordered ">
+        @foreach($detailsOpen as $detailOpen)
+        <tr>
+            <th>
+                {{$loop->iteration}}：オープン2ちゃんねる
+            </th>
+            <!-- <td>残り{{$loop->remaining}}</td> -->
+            <td>{{($detailOpen->title)}}</td>
+            <th>投稿日時</th>
+            <td>{{($detailOpen->date)}}</td>
+            <th>{{$loop->iteration}}レス目</th>
+            <td>{{($detailOpen->comment)}}</td>
+        </tr>
+        @endforeach
 
-            @foreach($detailsYahoo as $detailYahoo)
-            <tr>
-                <th>Yahoo!ファイナンス</th>
-                <td>{{$detailYahoo->title}}</td>
-                <th>更新時間</th>
-                <td>{{$detailYahoo->date}}</td>
-                <th>投稿者</th>
-                <td>{{$detailYahoo->publisher}}</td>
+        @foreach($detailsYahoo as $detailYahoo)
+        <tr>
+            <th>Yahoo!ファイナンス</th>
+            <td>{{$detailYahoo->title}}</td>
+            <th>更新時間</th>
+            <td>{{$detailYahoo->date}}</td>
+            <th>投稿者</th>
+            <td>{{$detailYahoo->publisher}}</td>
 
-            </tr>
-            @endforeach
+        </tr>
+        @endforeach
 
-            @foreach($detailsJapan as $detailJapan)
-            <tr>
-                <th>JapanTimes</th>
-                <td>{{$detailJapan->title}}</td>
-                <th>更新時間</th>
-                <td>{{$detailJapan->date}}</td>
-                <th>カテゴリー</th>
-                <td>{{$detailJapan->contributor}}</td>
+        @foreach($detailsJapan as $detailJapan)
+        <tr>
+            <th>JapanTimes</th>
+            <td>{{$detailJapan->title}}</td>
+            <th>更新時間</th>
+            <td>{{$detailJapan->date}}</td>
+            <th>カテゴリー</th>
+            <td>{{$detailJapan->contributor}}</td>
 
-            </tr>
-            @endforeach
+        </tr>
+        @endforeach
 
-        </table>
+    </table>
     </div>
 </body>
 

@@ -11,14 +11,14 @@ use App\Open2che as AppOpen2che;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\User;
+use Validator;
 
 class GetArticle extends Controller
 {
     public function index(Request $request)
     {
-        if (!empty($request->input('title'))) {
-            $this->sendArticle($request);
-        }
+        $this->sendArticle($request);
+
         $detailsOpen = Open2che::get();
         //  dd($detailsOpen);
         $detailsYahoo = Yahoo::get();
@@ -35,6 +35,22 @@ class GetArticle extends Controller
             ]
         );
         // compact('index','detailsOpen', 'detailsYahoo', 'detailsJapan');
+    }
+    public function sendArticle(Request $request)
+    {
+        $informations = array();
+        // dd($request->all());
+        $request->validate([
+            'name' => 'required|string|max:30',
+            'comment' => 'required|string|max:100'
+        ]);
+        // if(!empty($request->input('name'))&&
+        // !empty($request->input('comment')))
+        $informations = array(
+            'name' => $request->input('name'),
+            'comment' => $request->input('comment')
+        );
+        Post::insert($informations);
     }
 
     //取得したデータをDBに登録
@@ -162,13 +178,13 @@ class GetArticle extends Controller
                 )) {
                     // dd($res);
                     // dd($comment);
-                    if(preg_match(
+                    if (preg_match(
                         "/(.*?)<[a-z]+/is",
                         $comment[2],
                         $message
-                    )){
+                    )) {
                         $detail['comment'] = $message[1];
-                    }else{
+                    } else {
                         $detail['comment'] = $comment[2];
                     }
                 } else {
@@ -325,22 +341,5 @@ class GetArticle extends Controller
     {
 
         return view('sign_up');
-    }
-
-
-    public function sendArticle(Request $request)
-    {
-        $informations = array();
-        // dd($request->all());
-        if (
-            !empty($request->input('name')) &&
-            !empty($request->input('comment'))
-        ) {
-            $informations = array(
-                'name' => $request->input('name'),
-                'comment' => $request->input('comment')
-            );
-        }
-        Post::insert($informations);
     }
 }
