@@ -24,6 +24,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/index', 'GetArticle@index')->name('index');
+Route::post('/index', 'GetArticle@index')->name('index');
 Route::get('/save_article', 'GetArticle@saveArticle');
 Route::get('/sign_up', 'GetArticle@sign_up')->name('sign_up');
 Route::get('/sign_in', 'GetArticle@sign_in')->name('sign_in');
@@ -51,18 +52,13 @@ Route::get('/hasmany', function () {
 });
 
 Route::get('/test', function () {
-    
- 
-    $practices = Publisher::with('Comment')->get();
-    // dd($prasctices);
-  foreach($practices as $practice){
-      foreach($practice->comment as $comment){
-          echo $comment->id;
-      }
-  }
-  
+
+
+    $practices = Publisher::with('Comment')->where('name', 'like', '%北%')->get();
+    // dd($practices);
     foreach ($practices as $practice) {
         foreach ($practice->comment as $comment) {
+            echo $practice->name;
             echo $comment->title;
         }
     }

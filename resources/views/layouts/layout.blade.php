@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         @section('form')
-        <form action="/send" method="post">
+        <form action="/index" method="post">
             @csrf
             <h2>コメントを残す</h2>
             <h3>フォーム</h3>
@@ -29,8 +29,8 @@
                 <input type="submit" value="送信">
             </div>
         </form>
-            @isset($new)
-            @foreach($new as $newone)
+            @isset($userPost)
+            @foreach($userPost as $newone)
             <table class="table table-borderd table-responsive">
                 <th>投稿者</th>
                 <td>{{$newone->name}}</td>
@@ -52,7 +52,7 @@
                 <td>{{($detailOpen->title)}}</td>
                 <th>投稿日時</th>
                 <td>{{($detailOpen->date)}}</td>
-                <th>コメント</th>
+                <th>{{$loop->iteration}}レス目</th>
                 <td>{{($detailOpen->comment)}}</td>
             </tr>
             @endforeach
@@ -76,7 +76,7 @@
                 <th>更新時間</th>
                 <td>{{$detailJapan->date}}</td>
                 <th>カテゴリー</th>
-                <td>取れていない</td>
+                <td>{{$detailJapan->contributor}}</td>
 
             </tr>
             @endforeach

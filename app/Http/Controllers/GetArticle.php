@@ -14,16 +14,21 @@ use App\User;
 
 class GetArticle extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if (!empty($request->input('title'))) {
+            $this->sendArticle($request);
+        }
         $detailsOpen = Open2che::get();
         //  dd($detailsOpen);
         $detailsYahoo = Yahoo::get();
         $detailsJapan = japanTime::get();
+        $userPost = Post::get();
 
         return view(
             'index',
             [
+                'userPost' => $userPost,
                 'detailsOpen' => $detailsOpen,
                 'detailsYahoo' => $detailsYahoo,
                 'detailsJapan' => $detailsJapan
@@ -104,7 +109,8 @@ class GetArticle extends Controller
             ) {
                 $detailsJapan[] = array(
                     'title' => $japan['title'],
-                    'date' => $japan['date']
+                    'date' => $japan['date'],
+                    'contributor' => $japan['contributor']
                 );
             }
         }
@@ -116,7 +122,7 @@ class GetArticle extends Controller
     // オープン２ちゃん取得
     private function getOpen()
     {
-        $url = 'https://uni.open2ch.net/test/read.cgi/newsplus/1588817462/l10';
+        $url = 'https://uni.open2ch.net/test/read.cgi/newsplus/1588817462/';
         $articles = @file_get_contents($url);
         // $articles = mb_convert_encoding($articles, "UTF-8", "SJIS");
         // dd($articles);
@@ -150,16 +156,24 @@ class GetArticle extends Controller
                     $detail['date'] = $date[0];
                 }
                 if (preg_match(
-                    "/<dd class=\"(.*?)\"rnum=\"[0-9]+\">(.*?)<\/font>/is",
+                    "/<dd class=\"(.*?)\" rnum=\"[0-9]+\">(.*?)<\/font>/is",
                     $res,
                     $comment
                 )) {
-                    dd($comment);
-                    $detail['comment'] = $comment[2];
+                    // dd($res);
+                    // dd($comment);
+                    if(preg_match(
+                        "/(.*?)<[a-z]+/is",
+                        $comment[2],
+                        $message
+                    )){
+                        $detail['comment'] = $message[1];
+                    }else{
+                        $detail['comment'] = $comment[2];
+                    }
+                } else {
+                    $detail['comment'] = '取れていない';
                 }
-                dd($res);
-                // dd($comment);
-                $detail['comment'] = "修正！レスが取れてない";
                 if (
                     !empty($detail['title']) &&
                     !empty($detail['date']) &&
@@ -268,7 +282,7 @@ class GetArticle extends Controller
                     $res,
                     $title
                 )) {
-                    // dd($title);
+                    // dd($res);
                     $detail['title'] = $title[2];
                 }
                 if (preg_match(
@@ -279,17 +293,18 @@ class GetArticle extends Controller
                     $detail['date'] = $date[1];
                     // dd($detail['date']);
                 }
-                // if (preg_match(
-                //     "/<h3><a href=\"(.*?)\"class=\"category-link\">(.*?)<\/a><\/h3>/is",
-                //     $res,
-                //     $publisher
-                // )) {
-                //     dd($publisher);
-                //     $detail['publisher'] = $publisher[1];
-                // }
+                if (preg_match(
+                    "/<p><a href=\"(.*?)\">(.*?)<\/a><\/p>/is",
+                    $res,
+                    $contributor
+                )) {
+                    // dd($publisher);
+                    $detail['contributor'] = $contributor[2];
+                }
                 if (
                     !empty($detail['title']) &&
-                    !empty($detail['date'])
+                    !empty($detail['date']) &&
+                    !empty($detail['contributor'])
                 )
                     $details[] = $detail;
                 // dd($detail);
@@ -315,28 +330,17 @@ class GetArticle extends Controller
 
     public function sendArticle(Request $request)
     {
-        $user_posts = $request->all();
         $informations = array();
-        $informations[] = array(
-            'name' => $request->input('name'),
-            'comment' => $request->input('comment')
-        );
-
+        // dd($request->all());
+        if (
+            !empty($request->input('name')) &&
+            !empty($request->input('comment'))
+        ) {
+            $informations = array(
+                'name' => $request->input('name'),
+                'comment' => $request->input('comment')
+            );
+        }
         Post::insert($informations);
-        $new = Post::get();
-        $detailsOpen = Open2che::get();
-        //  dd($detailsOpen);
-        $detailsYahoo = Yahoo::get();
-        $detailsJapan = japanTime::get();
-
-        return view(
-            'index',
-            [
-                'new' => $new,
-                'detailsOpen' => $detailsOpen,
-                'detailsYahoo' => $detailsYahoo,
-                'detailsJapan' => $detailsJapan,
-            ]
-        );
     }
 }
