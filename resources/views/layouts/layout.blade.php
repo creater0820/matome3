@@ -11,16 +11,23 @@
 
 <body>
     <div class="container">
+
         @section('form')
         <form action="/index" method="post">
             @csrf
             <h2>コメントを残す</h2>
             <h3>フォーム</h3>
             <div>
+                @if ($errors->has('name'))
+                <p>{{$errors->first('name')}}</p>
+                @endif
                 <label for="name">投稿者</label>
                 <input type="text" name="name">
             </div>
             <div>
+                @if ($errors->has('name'))
+                <p>{{$errors->first('comment')}}</p>
+                @endif
                 <label for="textarea">コメント</label>
                 <textarea name="comment">
                 </textarea>

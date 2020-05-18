@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ValidateForm;
 use Illuminate\Http\Request;
 use App\Models\Open2che;
 use App\Models\Yahoo;
@@ -9,15 +10,17 @@ use App\Models\Cloning;
 use App\Models\japanTime;
 use App\Open2che as AppOpen2che;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
 use App\User;
-use Validator;
+
 
 class GetArticle extends Controller
 {
     public function index(Request $request)
     {
         $this->sendArticle($request);
+
 
         $detailsOpen = Open2che::get();
         //  dd($detailsOpen);
@@ -39,13 +42,27 @@ class GetArticle extends Controller
     public function sendArticle(Request $request)
     {
         $informations = array();
-        // dd($request->all());
-        $request->validate([
-            'name' => 'required|string|max:30',
-            'comment' => 'required|string|max:100'
-        ]);
-        // if(!empty($request->input('name'))&&
-        // !empty($request->input('comment')))
+
+
+        $rules = [
+            'name' => 'required|max:20',
+            'comment' => 'required'
+        ];
+        $messages = [
+            'name.required' => '入力必須です',
+            'name.max' => '20文字以下',
+            'comment.required' => 'コメント必須です'
+        ];
+        $validation = Validator::make(
+            $request->all(),
+            $rules,
+            $messages
+        );
+        if ($validation->fails()) {
+            return redirect('/index')
+                ->withErrors($validation)
+                ->withInput();
+        }
         $informations = array(
             'name' => $request->input('name'),
             'comment' => $request->input('comment')
@@ -337,9 +354,18 @@ class GetArticle extends Controller
 
 
 
-    public function sign_up()
+    public function result(Yahoo $yahoos)
     {
 
-        return view('sign_up');
+        $data = [
+            'msg' => $yahoos
+        ];
+        //  echo($data);
+        return view(
+            'sign_up',
+            [
+                'data' => $data
+            ]
+        );
     }
 }
