@@ -4,153 +4,197 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ValidateForm;
 use Illuminate\Http\Request;
-use App\Models\Open2che;
-use App\Models\Yahoo;
-use App\Models\Cloning;
-use App\Models\japanTime;
 use App\Open2che as AppOpen2che;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
 use App\User;
-
+use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Http\RedirectResponse;
+use App\Models\Url;
+use App\Models\Content;
+use App\Models\PostAnchor;
+use App\Models\CommentAnchor;
+use App\Models\AnchorComment;
+use App\Models\Anchor;
 
 class GetArticle extends Controller
 {
     public function index(Request $request)
     {
-        $this->sendArticle($request);
+        $userPosts = Post::with(
+            [
+                'comment_anchors', 'comment_anchors.post'
+            ]
+        )
+            ->where('url_id', $request->input('url_id'))->orderBy('id', 'asc')->get();
 
+        $test = Post::join(
+            'comment_anchors',
+            'comment_anchors.post_comment_id',
+            '=',
+            'posts.id'
+        )
+            ->where('url_id', $request->input('url_id'))
+            ->whereColumn(
+                'posts.id',
+                'comment_anchors.post_comment_id'
+            )->toSql();
+            // dd($test);
 
-        $detailsOpen = Open2che::get();
-        //  dd($detailsOpen);
-        $detailsYahoo = Yahoo::get();
-        $detailsJapan = japanTime::get();
-        $userPost = Post::get();
+        $anchorComments = $this->mappingPost($userPosts);
+        // dd($userPosts);
+        $urlId = $request->input('url_id');
+        $errors = $this->saveUsersComment($request);
+        $contents = Content::where('url_id', $urlId)->get();
+        $urls = Url::all();
 
         return view(
             'index',
             [
-                'userPost' => $userPost,
-                'detailsOpen' => $detailsOpen,
-                'detailsYahoo' => $detailsYahoo,
-                'detailsJapan' => $detailsJapan
+                'userPosts' => $userPosts,
+                'contents' => $contents,
+                'urlId' => $request->input('url_id'),
+                'errors' => $errors,
+                'urls' => $urls,
+                'anchorComments' => $anchorComments,
+                // 'anchors' => $anchors,
             ]
         );
-        // compact('index','detailsOpen', 'detailsYahoo', 'detailsJapan');
     }
-    public function sendArticle(Request $request)
+
+    public function saveUsersComment(Request $request)
     {
-        $informations = array();
-
-
-        $rules = [
-            'name' => 'required|max:20',
-            'comment' => 'required'
-        ];
-        $messages = [
-            'name.required' => '入力必須です',
-            'name.max' => '20文字以下',
-            'comment.required' => 'コメント必須です'
-        ];
+        $usersComment = [];
+        $rules =
+            [
+                'name' => 'required|max:20',
+                'comment' => 'required'
+            ];
+        $messages =
+            [
+                'name.required' => '入力必須です',
+                'name.max' => '20文字以下',
+                'comment.required' => 'コメント必須です'
+            ];
         $validation = Validator::make(
             $request->all(),
             $rules,
             $messages
         );
-        if ($validation->fails()) {
-            return redirect('/index')
-                ->withErrors($validation)
-                ->withInput();
+        if (!$validation->fails()) {
+            $post = new Post();
+            $post->name = $request->input('name');
+            $post->comment = $request->input('comment');
+            $post->url_id = $request->input('url_id');
+            $post->save();
+
+            if (preg_match(
+                "/>>([0-9]+)/is",
+                $request->input('comment'),
+                $anchorNumber,
+            )) {
+
+                $commentAnchor = new CommentAnchor();
+                $commentAnchor->post_comment_id = $anchorNumber[1];
+                $commentAnchor->post_id = $post->id;
+                $commentAnchor->save();
+            }
         }
-        $informations = array(
-            'name' => $request->input('name'),
-            'comment' => $request->input('comment')
-        );
-        Post::insert($informations);
+        return $validation->errors();
     }
+
+    public function mappingPost($userPosts)
+    {
+        $array = [];
+        foreach ($userPosts as $userPost) {
+            $post = [];
+            $post = [
+                'id' => $userPost->id,
+                'name' => $userPost->name,
+                'comment' => $userPost->comment,
+            ];
+            foreach ($userPost->comment_anchors as $comment) {
+                $post['anchor_post'][] = [
+                    'id' => $comment->post->id,
+                    'name' => $comment->post->name,
+                    'comment' => $comment->post->comment,
+                ];
+            }
+            $array[] = $post;
+        }
+        // dd($array);
+        return $array;
+    }
+
 
     //取得したデータをDBに登録
     public function saveArticle()
     {
         $getOpens = $this->getOpen();
 
-        $detailsOpen = array();
+        $detailsOpen = [];
         foreach ($getOpens as $open) {
             if (
                 !empty($open['title']) &&
                 !empty($open['date']) &&
-                !empty($open['comment'])
+                !empty($open['putTogether'])
             ) {
-                $detailsOpen[] = array(
-                    'title' => $open['title'],
-                    'date' => $open['date'],
-                    'comment' => $open['comment']
-                );
+                $detailsOpen[] =
+                    [
+                        'title' => $open['title'],
+                        'date' => $open['date'],
+                        'putTogether' => $open['putTogether'],
+                        'url_id' => 1
+                    ];
             }
         }
-        Open2che::insert($detailsOpen);
-
-        // Open2ちゃん
-        // foreach ($getOpens as $open) {
-        //     $detail = array();
-        //     if (
-        //         !empty($open['title']) &&
-        //         !empty($open['date']) &&
-        //         !empty($open['comment']) 
-        //     ) {
-        //         $detail = array(
-        //             'title' => $open['title'],
-        //             'date' => $open['date'],
-        //             'comment' => $open['comment']
-        //         );
-        //     }
-        //     if(!empty($detail))$detailsOpen[] = $detail;
-        // }
-
+        Content::insert($detailsOpen);
 
         // Yahoo!ファイナンス
         $getYahoos = $this->getYahoo();
-        // dd($getYahoos);
-        $detailsYahoo = array();
+
+        $detailsYahoo = [];
         foreach ($getYahoos as $getYahoo) {
             if (
                 !empty($getYahoo['title']) &&
                 !empty($getYahoo['date']) &&
-                !empty($getYahoo['publisher'])
+                !empty($getYahoo['putTogether'])
             ) {
-                $detailsYahoo[] = array(
-                    'title' => $getYahoo['title'],
-                    'date' => $getYahoo['date'],
-                    'publisher' => $getYahoo['publisher']
-                );
+                $detailsYahoo[] =
+                    [
+                        'title' => $getYahoo['title'],
+                        'date' => $getYahoo['date'],
+                        'putTogether' => $getYahoo['putTogether'],
+                        'url_id' => 2,
+                    ];
             }
         }
-        // dd($detailsYahoo);
-        Yahoo::insert($detailsYahoo);
-
+        Content::insert($detailsYahoo);
 
         // ジャパンタイムス
         $getJapans = $this->getJapan();
         // dd($getJapans);
-        $detailsJapan = array();
+        $detailsJapan = [];
         foreach ($getJapans as $japan) {
             if (
                 !empty($japan['title']) &&
-                !empty($japan['title']) &&
-                !empty($japan['title'])
+                !empty($japan['date']) &&
+                !empty($japan['putTogether'])
             ) {
-                $detailsJapan[] = array(
-                    'title' => $japan['title'],
-                    'date' => $japan['date'],
-                    'contributor' => $japan['contributor']
-                );
+                $detailsJapan[] =
+                    [
+                        'title' => $japan['title'],
+                        'date' => $japan['date'],
+                        'putTogether' => $japan['putTogether'],
+                        'url_id' => 3
+                    ];
             }
         }
-        japanTime::insert($detailsJapan);
+        Content::insert($detailsJapan);
         return '正常にデータを取得しDBに保存しました';
     }
-
 
     // オープン２ちゃん取得
     private function getOpen()
@@ -159,7 +203,6 @@ class GetArticle extends Controller
         $articles = @file_get_contents($url);
         // $articles = mb_convert_encoding($articles, "UTF-8", "SJIS");
         // dd($articles);
-
         if (preg_match_all(
             // "/<dt>(.*?)<br><br>/",
             "/<dl val=\"[0-9]+\">(.*?)<\/dl>/is",
@@ -167,10 +210,10 @@ class GetArticle extends Controller
             $contents,
         )) {
             // dd($contents);
-            $detail = array();
-            $details = array();
+            $detail = [];
+            $details = [];
             foreach ($contents[0] as $res) {
-                $detail = array();
+                $detail = [];
                 if (preg_match(
                     "/<b>(.*?)<\/b>/",
                     $res,
@@ -200,17 +243,17 @@ class GetArticle extends Controller
                         $comment[2],
                         $message
                     )) {
-                        $detail['comment'] = $message[1];
+                        $detail['putTogether'] = $message[1];
                     } else {
-                        $detail['comment'] = $comment[2];
+                        $detail['putTogether'] = $comment[2];
                     }
                 } else {
-                    $detail['comment'] = '取れていない';
+                    $detail['putTogether'] = '取れていない';
                 }
                 if (
                     !empty($detail['title']) &&
                     !empty($detail['date']) &&
-                    !empty($detail['comment'])
+                    !empty($detail['putTogether'])
                 )
                     $details[] = $detail;
             }
@@ -236,11 +279,11 @@ class GetArticle extends Controller
             $contents,
         )) {
             // dd($contents);
-            $detail = array();
-            $details = array();
+            $detail = [];
+            $details = [];
             // dd($contents[1]);
             foreach ($contents[1] as $res) {
-                $detail = array();
+                $detail = [];
 
                 // $detail['title'] = $res;
                 // dd($res);
@@ -270,12 +313,12 @@ class GetArticle extends Controller
                 )) {
                     // dd($publisher);
                     if (!empty($publisher[1]))
-                        $detail['publisher'] = $publisher[1];
+                        $detail['putTogether'] = $publisher[1];
                 }
                 if (
                     !empty($detail['title']) &&
                     !empty($detail['date']) &&
-                    !empty($detail['publisher'])
+                    !empty($detail['putTogether'])
                 )
                     $details[] = $detail;
                 // dd($detail);
@@ -301,11 +344,11 @@ class GetArticle extends Controller
             $contents,
         )) {
             // dd($contents);
-            $detail = array();
-            $details = array();
+            $detail = [];
+            $details = [];
 
             foreach ($contents[1] as $res) {
-                $detail = array();
+                $detail = [];
 
                 // $detail['title'] = $res;
                 // dd($detail);
@@ -332,12 +375,12 @@ class GetArticle extends Controller
                     $contributor
                 )) {
                     // dd($publisher);
-                    $detail['contributor'] = $contributor[2];
+                    $detail['putTogether'] = $contributor[2];
                 }
                 if (
                     !empty($detail['title']) &&
                     !empty($detail['date']) &&
-                    !empty($detail['contributor'])
+                    !empty($detail['putTogether'])
                 )
                     $details[] = $detail;
                 // dd($detail);
@@ -346,26 +389,5 @@ class GetArticle extends Controller
             return !empty($details) ? $details : null;
         }
         return null;
-    }
-
-    public function saveUserInformation(Request $request)
-    {
-    }
-
-
-
-    public function result(Yahoo $yahoos)
-    {
-
-        $data = [
-            'msg' => $yahoos
-        ];
-        //  echo($data);
-        return view(
-            'sign_up',
-            [
-                'data' => $data
-            ]
-        );
     }
 }

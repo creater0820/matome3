@@ -13,4 +13,5 @@
 @endsection
 
 @section('content')
+@parent
 @endsection

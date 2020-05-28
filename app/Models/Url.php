@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class url extends Model
+class Url extends Model
 {
     //従テーブルsuredsと結びつける suredはモデル名
     public function sured(){

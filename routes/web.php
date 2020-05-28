@@ -23,17 +23,15 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () {
     return view('welcome');
 });
+// Route::get('/index/?name={anything}', 'GetArticle@index');
+
 Route::get('/index', 'GetArticle@index')->name('index');
 Route::post('/index', 'GetArticle@index')->name('index');
 Route::get('/save_article', 'GetArticle@saveArticle');
 Route::get('/sign_up', 'GetArticle@sign_up')->name('sign_up');
 Route::get('/sign_in', 'GetArticle@sign_in')->name('sign_in');
 Route::post('/send', 'GetArticle@sendArticle');
-Route::get('/result', 'GetArticle@result');
-Route::get('/result/{id}', 'GetArticle@result');
 
-Route::get('/matome/index', 'Matome@index');
-// Route::get('/store', 'GetArticle@store')->name('store');
 
 Auth::routes();
 

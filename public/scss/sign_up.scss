@@ -1,13 +1,49 @@
-
-.container{
-width: 1500px;
+.header {
+  height: 100px;
+  background-color: gray;
 }
-table{
-  
-}
-tr{
-//  background-color: rgb(191, 232, 248);
-}
-    h1{
-        color: red;
+div.container {
+  display: flex;
+  .content {
+    text-align: center;
+    flex: 4;
+  }
+  .userPost {
+    // border: solid 0.5px ;
+    margin: 0 20px;
+    text-align: center;
+    flex: 2;
+    .form {
+      border: solid 1px;
     }
+  }
+  .link {
+    flex: 1;
+  }
+  .anchor {
+    color: blue;
+  }
+  span.effect {
+    display: none;
+  }
+  p.anchor {
+    // visibility: hidden;
+  }
+}
+
+div#main{
+    position: relative;
+    }
+    
+    div#popup1{
+    position: absolute;
+    top: 32px;
+    left: 240px;
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    width: 120px;
+    background-color: #0000cd;
+    }
+
+    
