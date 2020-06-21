@@ -1,13 +1,191 @@
+div.body {
+  padding: 10px;
+}
+div.header {
+  height: 100px;
+  background-color: rgb(241, 236, 240);
+  margin: 0 15px;
+  margin-bottom: 10px;
+}
+div.container {
+  margin: 0;
+  display: flex;
+  max-width: 3000px;
+  div.userPost {
+    border-left: double 3px rgb(224, 215, 215);
+    border-right: double 3px rgb(224, 215, 215);
+    padding: 0 10px;
+    margin-right: 0;
 
-.container{
-width: 1500px;
-}
-table{
-  
-}
-tr{
-//  background-color: rgb(191, 232, 248);
-}
-    h1{
-        color: red;
+    textarea {
+      resize: vertical;
+      width: 450px;
+      margin-bottom: 10px;
     }
+
+    p.errors {
+      color: red;
+    }
+
+    form div input[type="submit"] {
+      width: 100px;
+      border-radius: 5px;
+      background-color: rgb(235, 215, 215);
+      box-shadow: 0 3px 0 0 rgb(241, 236, 236); /*影の色(rgbaの値を変更)*/
+    }
+    form div input[type="submit"]:hover {
+      opacity: 0.6;
+      box-shadow: none;
+    }
+
+    .top {
+      //   background-color: rgb(245, 238, 238);
+      border-bottom: dotted 1px gray;
+    }
+    .middle {
+    }
+    .bottom {
+      span {
+        border-bottom: dotted 1px rgb(196, 129, 129);
+      }
+    }
+    p {
+      margin: 0;
+      text-align: left;
+      //   border-left: dotted 1px rgb(238, 220, 220);
+      //   border-right: dotted 1px rgb(238, 220, 220);
+    }
+  }
+  div {
+    .top {
+      background-color: rgb(247, 242, 242);
+      border-bottom: dotted 1px gray;
+    }
+    .middle {
+      padding-top: 10px;
+    }
+    .bottom {
+      span {
+        border-bottom: dotted 1px rgb(196, 129, 129);
+      }
+    }
+  }
+  .content {
+    padding: 0 20px;
+    border-left: double 3px rgb(228, 216, 216);
+    border-right: double 3px rgb(228, 216, 216);
+    margin: 0 10px;
+    text-align: center;
+    flex: 6;
+    #map-canvas {
+      width: 1000px ;
+      height: 700px ;
+    
+    }
+    div {
+      p.middle {
+        // border-bottom: dotted 1px rgb(196, 129, 129);
+        padding-top: 5px;
+      }
+      text-align: left;
+    }
+  }
+  .userPost {
+    // border: solid 0.5px ;
+    margin: 0 20px;
+
+    flex: 2;
+    .form {
+      border: solid 1px;
+    }
+  }
+  .link {
+    flex: 1;
+    border-left: dotted 1px gray;
+    border-right: dotted 1px gray;
+  }
+  //   .anchor {
+  //     color: blue;
+  //   }
+  span.effect {
+    display: none;
+  }
+  a.popup {
+    color: blue;
+  }
+  td.anchor {
+    color: blue;
+    padding: 0;
+    margin: 0;
+  }
+  td {
+    padding: 5px;
+  }
+
+  .tooltip1 {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    p {
+      a.anchor_ {
+        color: blue;
+      }
+      padding-top: 12px;
+    }
+  }
+  p.bottom {
+    padding-top: 10px;
+    padding-bottom: 5px;
+  }
+  div.description1 {
+    display: none;
+    position: absolute;
+    background-color: rgb(238, 222, 222);
+
+    z-index: 1;
+    transform: translateZ(20px);
+    width: 500px;
+    p.middle {
+      padding-top: 10px;
+    }
+  }
+  .tooltip1:hover .description1 {
+    display: block;
+    bottom: 55px;
+    right: px;
+  }
+
+  div.right-box {
+    flex: 2;
+    div.month {
+      border-bottom: 1px solid gray;
+      margin-bottom: 5px;
+      span {
+        background-color: rgb(250, 213, 212);
+        padding: 0px 50px 0px 10px;
+        border-radius: 5px;
+        margin-right: 43px;
+      }
+    }
+    div.variety {
+      border-bottom: 1px solid gray;
+      margin-bottom: 5px;
+      span {
+        background-color: rgb(250, 213, 212);
+        padding: 0px 30px 0px 10px;
+        border-radius: 5px;
+        margin-right: 0px;
+      }
+    }
+    div.search {
+      border-bottom: 1px solid gray;
+      margin-bottom: 5px;
+      span {
+        background-color: rgb(250, 213, 212);
+        padding: 0px 30px 0px 10px;
+        border-radius: 5px;
+        margin-right: 0px;
+      }
+    }
+  }
+}

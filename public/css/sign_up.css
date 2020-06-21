@@ -1,6 +1,167 @@
-.container {
-  width: 1500px;
+div.body {
+  padding: 10px;
 }
-h1 {
+div.header {
+  height: 100px;
+  background-color: #f1ecf0;
+  margin: 0 15px;
+  margin-bottom: 10px;
+}
+div.container {
+  margin: 0;
+  display: flex;
+  max-width: 3000px;
+}
+div.container div.userPost {
+  border-left: double 3px #e0d7d7;
+  border-right: double 3px #e0d7d7;
+  padding: 0 10px;
+  margin-right: 0;
+}
+div.container div.userPost textarea {
+  resize: vertical;
+  width: 450px;
+  margin-bottom: 10px;
+}
+div.container div.userPost p.errors {
   color: red;
+}
+div.container div.userPost form div input[type="submit"] {
+  width: 100px;
+  border-radius: 5px;
+  background-color: #ebd7d7;
+  box-shadow: 0 3px 0 0 #f1ecec;
+  /*影の色(rgbaの値を変更)*/
+}
+div.container div.userPost form div input[type="submit"]:hover {
+  opacity: 0.6;
+  box-shadow: none;
+}
+div.container div.userPost .top {
+  border-bottom: dotted 1px gray;
+}
+div.container div.userPost .bottom span {
+  border-bottom: dotted 1px #c48181;
+}
+div.container div.userPost p {
+  margin: 0;
+  text-align: left;
+}
+div.container div .top {
+  background-color: #f7f2f2;
+  border-bottom: dotted 1px gray;
+}
+div.container div .middle {
+  padding-top: 10px;
+}
+div.container div .bottom span {
+  border-bottom: dotted 1px #c48181;
+}
+div.container .content {
+  padding: 0 20px;
+  border-left: double 3px #e4d8d8;
+  border-right: double 3px #e4d8d8;
+  margin: 0 10px;
+  text-align: center;
+  flex: 6;
+}
+div.container .content #map-canvas {
+  width: 1000px;
+  height: 700px;
+}
+div.container .content div {
+  text-align: left;
+}
+div.container .content div p.middle {
+  padding-top: 5px;
+}
+div.container .userPost {
+  margin: 0 20px;
+  flex: 2;
+}
+div.container .userPost .form {
+  border: solid 1px;
+}
+div.container .link {
+  flex: 1;
+  border-left: dotted 1px gray;
+  border-right: dotted 1px gray;
+}
+div.container span.effect {
+  display: none;
+}
+div.container a.popup {
+  color: blue;
+}
+div.container td.anchor {
+  color: blue;
+  padding: 0;
+  margin: 0;
+}
+div.container td {
+  padding: 5px;
+}
+div.container .tooltip1 {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+div.container .tooltip1 p {
+  padding-top: 12px;
+}
+div.container .tooltip1 p a.anchor_ {
+  color: blue;
+}
+div.container p.bottom {
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+div.container div.description1 {
+  display: none;
+  position: absolute;
+  background-color: #eedede;
+  z-index: 1;
+  transform: translateZ(20px);
+  width: 500px;
+}
+div.container div.description1 p.middle {
+  padding-top: 10px;
+}
+div.container .tooltip1:hover .description1 {
+  display: block;
+  bottom: 55px;
+  right: px;
+}
+div.container div.right-box {
+  flex: 2;
+}
+div.container div.right-box div.month {
+  border-bottom: 1px solid gray;
+  margin-bottom: 5px;
+}
+div.container div.right-box div.month span {
+  background-color: #fad5d4;
+  padding: 0px 50px 0px 10px;
+  border-radius: 5px;
+  margin-right: 43px;
+}
+div.container div.right-box div.variety {
+  border-bottom: 1px solid gray;
+  margin-bottom: 5px;
+}
+div.container div.right-box div.variety span {
+  background-color: #fad5d4;
+  padding: 0px 30px 0px 10px;
+  border-radius: 5px;
+  margin-right: 0px;
+}
+div.container div.right-box div.search {
+  border-bottom: 1px solid gray;
+  margin-bottom: 5px;
+}
+div.container div.right-box div.search span {
+  background-color: #fad5d4;
+  padding: 0px 30px 0px 10px;
+  border-radius: 5px;
+  margin-right: 0px;
 }

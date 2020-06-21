@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\ValidateForm;
 use Illuminate\Http\Request;
@@ -18,10 +18,12 @@ use App\Models\CommentAnchor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Favorite;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 
-class GetArticle extends Controller
+class GetArticleApi extends Controller
 {
-    public function index(Request $request)
+    public function storeFavorites(Request $request)
     {
         if (
             !empty($request->input('content_id')) &&
@@ -34,6 +36,23 @@ class GetArticle extends Controller
                 ]
             );
         }
+        $count = Favorite::where('content_id',$request->input('content_id'))->count();
+
+        return response()->json([
+            'content_id' => $request->input('content_id'),
+            'user_id' => $request->input('user_id'),
+            'count' => $count,
+        ], 200);
+    }
+    public function text(Request $request)
+    {
+        return response()->json([
+            'test' => $request->input('test'),
+        ], 200);
+    }
+    public function index(Request $request)
+    {
+      
 
         $userId = Auth::id();
         // dd($userId);
@@ -93,8 +112,6 @@ class GetArticle extends Controller
                 'todaysInformation' => $todaysInfomation,
                 'userId' => $userId,
                 'likes' => $likes,
-             
-                
 
                 // 'anchors' => $anchors,
             ]
