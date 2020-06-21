@@ -25,7 +25,10 @@ Route::get('/', function () {
 });
 // Route::get('/index/?name={anything}', 'GetArticle@index');
 
+
 Route::get('/index', 'GetArticle@index')->name('index');
+Route::get('/page', 'GetArticlePage@index')->name('index');
+Route::post('/page', 'GetArticlePage@index')->name('index');
 Route::post('/index', 'GetArticle@index')->name('index');
 Route::get('/save_article', 'GetArticle@saveArticle');
 Route::get('/sign_up', 'GetArticle@sign_up')->name('sign_up');

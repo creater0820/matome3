@@ -3,8 +3,9 @@
 @section('addSASS')
 <link href="{{ asset('css/sign_up.css') }}" rel="stylesheet">
 @endsection
+
 @section('addJs')
-<script type="text/javascript" src="/js/matome.js"></script>
+<script type="text/javascript" src="/js/matomeApi.js"></script>
 @endsection
 
 @section('content')
@@ -32,7 +33,7 @@
     </div>
 
     <div class="userPost">
-        
+
         <form action="{{route(
             'index',
                 [
@@ -53,7 +54,6 @@
             <textarea id="textarea" name="comment" rows="10" cols="40"></textarea>
             <input type="hidden" name="comment_url_id" value="{{$urlId}}">
             <div><input type="submit" value="送信"></div>
-
         </form>
 
 
@@ -82,10 +82,9 @@
             </div>
         </div>
         @endforeach
-        
+      
     </div>
 
-    
     <div class="content">
         <div id="map-canvas"></div>
 
@@ -98,14 +97,13 @@
             <button type="button" class="btn btn-info" disabled>いいね！
                 ({{($todayInformation->favorite_count)}})</button>
             @else
-            <button class="btn btn-info" onclick="postForm({{($todayInformation->id)}},{{$userId}},{{$urlId}})">いいね！
+            <button type="button" class="btn-info" data-content-id = "{{($todayInformation->id)}}" data-user-id = "{{$userId}}" data-url-id = "{{$urlId}}" >いいね！
                 ({{($todayInformation->favorite_count)}})</button>
             @endif
 
         </div>
         @endforeach
     </div>
-   
     <div class="right-box">
         <div class="variety">
             <span class="">検索</span>
@@ -126,9 +124,9 @@
             <span class="">サイトの種類</span>
             <select name="month" onChange="select(this)">
                 <option value="">選択してください</option>
-                <option value="http://127.0.0.1:8000/index?url_id=1">オープン２ちゃん</option>
-                <option value="http://127.0.0.1:8000/index?url_id=2">Yahoo!ファイナンス</option>
-                <option value="http://127.0.0.1:8000/index?url_id=3">JapanTimes</option>
+                <option value="http://127.0.0.1:8000/page?url_id=1">オープン２ちゃん</option>
+                <option value="http://127.0.0.1:8000/page?url_id=2">Yahoo!ファイナンス</option>
+                <option value="http://127.0.0.1:8000/page?url_id=3">JapanTimes</option>
 
             </select>
         </div>
@@ -148,5 +146,6 @@
         <button onclick="current()">現在位置</button>
 
     </div>
+
 </div>
 @endsection

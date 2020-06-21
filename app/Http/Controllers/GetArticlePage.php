@@ -19,30 +19,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Favorite;
 
-class GetArticle extends Controller
+class GetArticlePage extends Controller
 {
     public function index(Request $request)
     {
-        if (
-            !empty($request->input('content_id')) &&
-            !empty($request->input('user_id'))
-        ) {
-            Favorite::insert(
-                [
-                    'content_id' => $request->input('content_id'),
-                    'user_id' => $request->input('user_id'),
-                ]
-            );
-        }
-
         $userId = Auth::id();
         // dd($userId);
 
         $likes = Content::with(['favorites'])->where('url_id', $request->input('url_id'))->get();
         // dd($likes);
-
-
-
         $urlId = $request->input('url_id');
 
         $userPosts = Post::with(
@@ -52,49 +37,27 @@ class GetArticle extends Controller
         )
             ->where('url_id', $request->input('url_id'))->orderBy('id', 'asc')->get();
 
-        $contents = Content::where('url_id', $urlId)->where('created_at', 'Like', Carbon::now()->format('Y-m-d') . '%')->get();
+        $todaysInfomation = Content::where('url_id', $urlId)->where('created_at', 'Like', Carbon::now()->format('Y-m-d') . '%')->get();
 
-        if (!empty($request->input('sort_id'))) {
-            switch ($request->input('sort_id')) {
-                case 1:
-                    $sorted = $contents->sortByDesc('favorite_count');
-                    $todaysInfomation = $sorted->values()->all();
-                    break;
-                default:
-                    $todaysInfomation = $contents;
-            }
-        } else {
-            $todaysInfomation = $contents;
-        }
-
-
-
+    
         $anchorComments = $this->mappingPost($userPosts);
         // dd($userPosts);
-        $errors = $this->saveUsersComment($request);
-        if (!empty($request->input('name'))) {
-            return redirect('/index?url_id=' . $urlId);
-            // header('Location:./');
-        }
 
         $contents = Content::where('url_id', $urlId)->get();
 
         $urls = Url::all();
 
         return view(
-            'index',
+            'layouts.api',
             [
                 'userPosts' => $userPosts,
                 'contents' => $contents,
                 'urlId' => $request->input('url_id'),
-                'errors' => $errors,
                 'urls' => $urls,
                 'anchorComments' => $anchorComments,
                 'todaysInformation' => $todaysInfomation,
                 'userId' => $userId,
                 'likes' => $likes,
-             
-                
 
                 // 'anchors' => $anchors,
             ]

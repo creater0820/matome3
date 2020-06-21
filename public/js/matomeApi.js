@@ -20,35 +20,55 @@ function select(obj) {
 
 
 
+$(function () {
+    $('.btn-info').on('click', function () {
+        $.ajax('/api/favorites/store',
+            {
+                type: 'post',
+                dataType: 'json',
+                data:{
+                    'user_id':$(this).data('user-id'),
+                    'content_id':$(this).data('content-id'),
+                },
+                context:this
+            }
+        ).done(function (data) {
+            window.console.log(data);
+            if(data.count){
+                $(this).text('いいね！('+data.count+')');
+                $(this).prop('disabled',true);
+            }
+            // var lat = data.results[0].geometry.location.lat;
+            // var lng = data.results[0].geometry.location.lng;
+            // createMap(lat, lng);
+        });
+        // var form = document.createElement('form');
+        // form.method = 'post';
+        // form.action = "/page?url_id=" + $(this).data('url-id') + "#contents_" + $(this).data('content-id');
 
-function postForm(contentId,userId,urlId) {
-    window.console.log(contentId);
-    window.console.log(userId);
-    window.console.log(urlId);
-    var form = document.createElement('form');
-    form.method = 'post';
-    form.action = "/index?url_id="+urlId+ "#contents_" +contentId;
+        // var input = document.createElement('input');
+        // input.name = 'content_id';
+        // input.value = $(this).data('content-id');
+        // form.appendChild(input);
 
-    var input = document.createElement('input');
-    input.name = 'content_id';
-    input.value = contentId;
-    form.appendChild(input);
+        // var input = document.createElement('input');
+        // input.name = 'user_id';
+        // input.value = $(this).data('user-id');
+        // form.appendChild(input);
 
-    var input = document.createElement('input');
-    input.name = 'user_id';
-    input.value = userId;
-    form.appendChild(input);
+        // var csrf = document.createElement('input');
+        // // すでに存在しているname="csrf-token"のvalueの値を取得する。
+        // csrf.name = '_token';
+        // csrf.value = document.getElementsByName('csrf-token')[0].content;
+        // form.appendChild(csrf);
 
-    var csrf = document.createElement('input');
-    // すでに存在しているname="csrf-token"のvalueの値を取得する。
-    csrf.name = '_token';
-    csrf.value = document.getElementsByName('csrf-token')[0].content;
-    form.appendChild(csrf);
+        // document.body.appendChild(form);
+        // form.submit();
+    });
+});
 
-    document.body.appendChild(form);
-    form.submit();
-    // window.console.log(form.action);
-}
+
+
 
 function sort(obj, urlId) {
     // var idx = obj.selectedIndex;
