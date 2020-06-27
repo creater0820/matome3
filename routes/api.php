@@ -21,4 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     Route::get('/api/test', 'Api\GetArticleApi@test');
 // });
 Route::get('/test', 'Api\GetArticleApi@test');
+Route::post('/comment/index', 'Api\GetArticleApi@index');
 Route::post('/favorites/store', 'Api\GetArticleApi@storeFavorites');
+Route::post('/commit/store', 'Api\GetArticleApi@storeCommit');

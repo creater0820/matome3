@@ -14,7 +14,6 @@ class SaveInformation extends Command
      * @var string
      */
     protected $signature = 'contents:save';
-
     /**
      * The console command description.
      *

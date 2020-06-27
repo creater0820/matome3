@@ -93,9 +93,6 @@ class GetArticle extends Controller
                 'todaysInformation' => $todaysInfomation,
                 'userId' => $userId,
                 'likes' => $likes,
-             
-                
-
                 // 'anchors' => $anchors,
             ]
         );

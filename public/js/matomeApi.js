@@ -21,22 +21,22 @@ function select(obj) {
 
 
 $(function () {
-    $('.btn-info').on('click', function () {
+    $('.favorite').on('click', function () {
         $.ajax('/api/favorites/store',
             {
                 type: 'post',
                 dataType: 'json',
-                data:{
-                    'user_id':$(this).data('user-id'),
-                    'content_id':$(this).data('content-id'),
+                data: {
+                    'content_id': $(this).data('content-id'),
+                    'user_id': $(this).data('user-id'),
                 },
-                context:this
+                context: this
             }
         ).done(function (data) {
             window.console.log(data);
-            if(data.count){
-                $(this).text('いいね！('+data.count+')');
-                $(this).prop('disabled',true);
+            if (data.count) {
+                $(this).text('いいね！(' + data.count + ')');
+                $(this).prop('disabled', true);
             }
             // var lat = data.results[0].geometry.location.lat;
             // var lng = data.results[0].geometry.location.lng;
@@ -65,7 +65,62 @@ $(function () {
         // document.body.appendChild(form);
         // form.submit();
     });
+    // $('.commit').on('click', function () {
+    //     $.ajax('/api/commit/store',
+    //         {
+    //             type: 'post',
+    //             dataType: 'json',
+    //             data: {
+    //                 'name': $('.comment_name').val(),
+    //                 'comment': $('.comment_text').val(),
+    //                 'url_id': $('.comment_url_id').val(),
+    //             }
+    //         }
+    //     ).done(function (data) {
+    //         window.console.log(data);
+    //     })
+    //         .fail(function (data) {
+    //             window.console.log(data.responseJSON.errors.comment[0]);
+    //             $('.error_comment').text(data.responseJSON.errors.comment[0]);
+    //         }); 
+    // });
+    $('.commit').on('click', function () {
+        $.ajax('/api/commit/store',
+            {
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    name: $('.comment_name').val(),
+                    comment: $('.comment_text').val(),
+                    url_id: $('.comment_url_id').val(),
+                }
+            }
+        ).done(function (data) {
+            window.console.log(data);
+            // getComments($('.comment_url_id').val());
+        })
+            .fail(function (data) {
+                window.console.log(data.responseJSON);
+                // $('.error_comment').text(data.responseJSON.errors.comment[0]);
+            });
+    });
 });
+// $(function () {
+//     function getComments(urlId) {
+//         $.ajax('/api/comment/index',
+//             {
+//                 type: 'post',
+//                 dataType: JSON,
+//                 data: {
+//                     url_id: urlId,
+//                 }
+//             }
+//         ).done(function (data) {
+//             window.console.log(data);
+
+//         })
+//     }
+// });
 
 
 
@@ -99,7 +154,7 @@ $(function () {
     $('button#text').on('click', function () {
         var city = $('#prefecture').val();
         var map = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&components=country:JP&key=AIzaSyD6zYu86YxyiRQAkEXLZvqUS-ack6tAwVE';
-        var url = "http://127.0.0.1:8000/page?url_id=3";
+        
         $.ajax(map,
             {
                 type: 'get',
@@ -116,8 +171,8 @@ $(function () {
     function createMap(lat, lng) {
         var LatLng = new google.maps.LatLng(lat, lng);
         var map = new google.maps.Map(document.getElementById("map-canvas"), {
-            center: new google.maps.LatLng(lat, lng),
-            zoom: 11,
+            center: LatLng,
+            zoom: 10,
         });
     }
 });
