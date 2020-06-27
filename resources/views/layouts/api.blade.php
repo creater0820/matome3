@@ -34,27 +34,19 @@
 
     <div class="userPost">
 
-        <form action="{{route(
-            'index',
-                [
-                    'url_id' => $urlId
-                ]
-            )}}" method="post">
-            @csrf
-            @if ($errors->has('name'))
-            <p class="errors">{{$errors->first('name')}}</p>
-            @endif
+        <div>
+            <p class="error_name"></p>
             <label for="name">投稿者</label>
-            <input type="text" name="name" value="名無しさん">
-
-            @if ($errors->has('name'))
-            <p class="errors">{{$errors->first('comment')}}</p>
-            @endif
+            <input class="comment_name" type="text" name="name" value="名無しさん">
+            <p class="error_comment"></p>
             <div><label for="textarea">コメント</label></div>
-            <textarea id="textarea" name="comment" rows="10" cols="40"></textarea>
-            <input type="hidden" name="comment_url_id" value="{{$urlId}}">
-            <div><input type="submit" value="送信"></div>
-        </form>
+            <textarea class="comment_text" name="comment" rows="10" cols="40"></textarea>
+            <input type="hidden" class="comment_url_id" value="{{$urlId}}">
+            <button type="button" class="btn btn-info commit">
+                送信</button>
+        </div>
+
+
 
 
         @foreach($anchorComments as $anchorComment)
@@ -82,7 +74,7 @@
             </div>
         </div>
         @endforeach
-      
+
     </div>
 
     <div class="content">
@@ -97,7 +89,7 @@
             <button type="button" class="btn btn-info" disabled>いいね！
                 ({{($todayInformation->favorite_count)}})</button>
             @else
-            <button type="button" class="btn-info" data-content-id = "{{($todayInformation->id)}}" data-user-id = "{{$userId}}" data-url-id = "{{$urlId}}" >いいね！
+            <button type="button" class="btn btn-info favorite" data-content-id="{{($todayInformation->id)}}" data-user-id="{{$userId}}" data-url-id="{{$urlId}}">いいね！
                 ({{($todayInformation->favorite_count)}})</button>
             @endif
 

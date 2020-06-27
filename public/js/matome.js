@@ -19,8 +19,6 @@ function select(obj) {
 }
 
 
-
-
 function postForm(contentId,userId,urlId) {
     window.console.log(contentId);
     window.console.log(userId);

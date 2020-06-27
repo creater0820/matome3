@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Providers\Rule;
 use App\Http\Requests\ValidateForm;
 use Illuminate\Http\Request;
 use App\Open2che as AppOpen2che;
@@ -36,7 +37,7 @@ class GetArticleApi extends Controller
                 ]
             );
         }
-        $count = Favorite::where('content_id',$request->input('content_id'))->count();
+        $count = Favorite::where('content_id', $request->input('content_id'))->count();
 
         return response()->json([
             'content_id' => $request->input('content_id'),
@@ -44,26 +45,27 @@ class GetArticleApi extends Controller
             'count' => $count,
         ], 200);
     }
-    public function text(Request $request)
+    public function storeCommit(Request $request)
     {
+        $errors = $this->saveUsersComment($request);
+        if (count($errors)) {
+            return response()->json([
+                'errors' => $errors,
+                'test' => 1,
+            ], 403);
+        }
+
         return response()->json([
-            'test' => $request->input('test'),
+            'name' => $request->input('name'),
+            'comment' => $request->input('comment'),
+            'url_id' => $request->input('url_id'),
+            'errors' => $errors,
         ], 200);
     }
+
     public function index(Request $request)
     {
-      
-
         $userId = Auth::id();
-        // dd($userId);
-
-        $likes = Content::with(['favorites'])->where('url_id', $request->input('url_id'))->get();
-        // dd($likes);
-
-
-
-        $urlId = $request->input('url_id');
-
         $userPosts = Post::with(
             [
                 'comment_anchors', 'comment_anchors.post',
@@ -71,70 +73,30 @@ class GetArticleApi extends Controller
         )
             ->where('url_id', $request->input('url_id'))->orderBy('id', 'asc')->get();
 
-        $contents = Content::where('url_id', $urlId)->where('created_at', 'Like', Carbon::now()->format('Y-m-d') . '%')->get();
-
-        if (!empty($request->input('sort_id'))) {
-            switch ($request->input('sort_id')) {
-                case 1:
-                    $sorted = $contents->sortByDesc('favorite_count');
-                    $todaysInfomation = $sorted->values()->all();
-                    break;
-                default:
-                    $todaysInfomation = $contents;
-            }
-        } else {
-            $todaysInfomation = $contents;
-        }
-
-
-
         $anchorComments = $this->mappingPost($userPosts);
-        // dd($userPosts);
-        $errors = $this->saveUsersComment($request);
-        if (!empty($request->input('name'))) {
-            return redirect('/index?url_id=' . $urlId);
-            // header('Location:./');
-        }
-
-        $contents = Content::where('url_id', $urlId)->get();
-
-        $urls = Url::all();
-
-        return view(
-            'index',
-            [
-                'userPosts' => $userPosts,
-                'contents' => $contents,
-                'urlId' => $request->input('url_id'),
-                'errors' => $errors,
-                'urls' => $urls,
-                'anchorComments' => $anchorComments,
-                'todaysInformation' => $todaysInfomation,
-                'userId' => $userId,
-                'likes' => $likes,
-
-                // 'anchors' => $anchors,
-            ]
-        );
+        // dd($anchorComments);
+        return response()->json([
+            'anchor_comment' => $anchorComments,
+        ]);
     }
     public function saveUsersComment(Request $request)
     {
         $usersComment = [];
-        $rules =
-            [
-                'name' => 'required|max:20',
-                'comment' => 'required',
-            ];
-        $messages =
-            [
-                'name.required' => '入力必須です',
-                'name.max' => '20文字以下',
-                'comment.required' => 'コメント必須です'
-            ];
+        // $rules =
+        //     [
+        //         'name' => 'required|max:20',
+        //         'comment' => 'required',
+        //     ];
+        // $messages =
+        //     [
+        //         'name.required' => '入力必須です',
+        //         'name.max' => '20文字以下',
+        //         'comment.required' => 'コメント必須です'
+        //     ];
         $validation = Validator::make(
             $request->all(),
-            $rules,
-            $messages,
+            Rule::commentRule(),
+            Rule::commentMessage(),
         );
 
         if (!$validation->fails()) {

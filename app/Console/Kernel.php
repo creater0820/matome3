@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('contents:save')->cron('0 6,15,20 * * *');
-
         // $schedule->call(new \App\Console\Commands($schedule));
     }
 
